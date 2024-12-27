@@ -1,3 +1,9 @@
+# Project-specific
+problematic_files.txt
+search.html
+assets_index.json
+images/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
