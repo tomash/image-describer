@@ -13,8 +13,10 @@ image_path = sys.argv[1]
 # Check if the image_path is a directory
 if os.path.isdir(image_path):
     # Get list of all files with image extensions in all subdirectories
-    #image_extensions = ('*.jpg', '*.jpeg', '*.gif', '*.png')
-    image_extensions = ('*.jpg', '*.jpeg', '*.png')
+    # image_extensions = ('*.jpg', '*.jpeg', '*.gif', '*.png')
+    # image_extensions = ('*.jpg', '*.jpeg', '*.png')
+    # image_extensions = ('*.gif')
+    image_extensions = ('*.gif', '*.png')
     image_files = []
     for ext in image_extensions:
         image_files.extend(glob.glob(os.path.join(image_path, '**', ext), recursive=True))
@@ -38,6 +40,8 @@ for image_file in image_files:
         media_type = 'image/jpeg'
     elif image_file.lower().endswith('.png'):
         media_type = 'image/png'
+    elif image_file.lower().endswith('.gif'):
+        media_type = 'image/gif'
     else:
         print(f"Unsupported image format: {image_file}")
         continue
@@ -85,6 +89,9 @@ for image_file in image_files:
         print(description)
         print("=====================================")
     except anthropic.BadRequestError as e:
+        print(f"Error processing image {image_file}: {e}")
+        continue
+    except anthropic.APIStatusError as e:
         print(f"Error processing image {image_file}: {e}")
         continue
 
