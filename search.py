@@ -20,27 +20,43 @@ else:
     image_files = [image_path]
 
 # Keep image files that have a corresponding .txt file already
-image_files = [f for f in image_files if os.path.exists(os.path.splitext(f)[0] + '.txt')]
+# image_files = [f for f in image_files if os.path.exists(os.path.splitext(f)[0] + '.txt')]
+
+# Keep image files that have a corresponding .json file already
+image_files = [f for f in image_files if os.path.exists(os.path.splitext(f)[0] + '.json')]
+
 
 print(f"Generating JSON for {len(image_files)} images...")
 json_data = []
 problematic_files = []
 
 for image_file in image_files:
-    # Extract the filename without extension and add .txt extension
-    text_file_path = os.path.splitext(image_file)[0] + '.txt'
-
-    rel_text_file_path = os.path.join(os.path.basename(os.path.dirname(text_file_path)), os.path.basename(text_file_path))
+    #rel_text_file_path = os.path.join(os.path.basename(os.path.dirname(text_file_path)), os.path.basename(text_file_path))
     # print(rel_text_file_path)
     rel_image_file_path = os.path.join(os.path.basename(os.path.dirname(image_file)), os.path.basename(image_file))
 
+    # Extract the filename without extension and add .json extension
+    image_json_file_path = os.path.splitext(image_file)[0] + '.json'
+    image_json_data = {}
+    if os.path.exists(image_json_file_path):
+        with open(image_json_file_path, 'r') as image_json_file:
+            image_json_data = json.load(image_json_file)
+
     description = ""
-    try:
-        with open(text_file_path, 'r', encoding='utf-8') as file:
-            description = file.read()
-    except UnicodeDecodeError:
-        print(f"Could not decode file: {text_file_path}")
-        problematic_files.append(text_file_path)
+    if "claude-3-haiku-20240307" in image_json_data:
+        description = description + "Claude-3-Haiku 20240707: " + image_json_data["claude-3-haiku-20240307"] + "\n"
+
+    if "llama3.2-vision:11b" in image_json_data:
+        description = description + "LLama 3.2-Vision:11b: " + image_json_data["llama3.2-vision:11b"] + "\n"
+
+    # Extract the filename without extension and add .txt extension
+    # text_file_path = os.path.splitext(image_file)[0] + '.txt'
+    # try:
+    #     with open(text_file_path, 'r', encoding='utf-8') as file:
+    #         description = file.read()
+    # except UnicodeDecodeError:
+    #     print(f"Could not decode file: {text_file_path}")
+    #     problematic_files.append(text_file_path)
 
     json_data.append({
         "asset_path": rel_image_file_path,
