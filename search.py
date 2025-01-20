@@ -49,6 +49,9 @@ for image_file in image_files:
     if "llama3.2-vision:11b" in image_json_data:
         description = description + "LLama 3.2-Vision:11b: " + image_json_data["llama3.2-vision:11b"] + "\n"
 
+    if "gemini-1.5-flash" in image_json_data:
+        description = description + "Gemini 1.5 Flash: " + image_json_data["gemini-1.5-flash"] + "\n"
+
     # Extract the filename without extension and add .txt extension
     # text_file_path = os.path.splitext(image_file)[0] + '.txt'
     # try:
